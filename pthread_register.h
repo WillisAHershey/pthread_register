@@ -1,9 +1,6 @@
 #ifndef PTHREAD_REGISTER
 #define PTHREAD_REGISTER
 
-#include <stdlib.h>
-#include <pthread.h>
-
 #define REGISTER 0
 #define RECALL 1
 #define DEREGISTER 2
