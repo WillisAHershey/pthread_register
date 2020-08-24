@@ -2,6 +2,9 @@
 #include <pthread.h>
 #include "pthread_store.h"
 
+#define PTHREAD_STORE_SUCCESS 0
+#define PTHREAD_STORE_FAILURE -1
+
 typedef struct storelistStruct{
   struct storelistStruct *next;
   void *store;
@@ -15,12 +18,12 @@ int pthread_store(void *store){
   pthread_t self=pthread_self();
   storelist *pt=malloc(sizeof(storelist));
   if(!pt)
-	return -1;
+	return PTHREAD_STORE_FAILURE;
   pthread_mutex_lock(&mux);
   *pt=(storelist){.next=head,.store=store,.tid=self};
   head=pt;
   pthread_mutex_unlock(&mux);
-  return 0;
+  return PTHREAD_STORE_SUCCESS;
 }
 
 void* pthread_recall(){
@@ -54,7 +57,7 @@ void* pthread_discard(){
 		b->next=r->next;
 		out=r->store;
 		free(r);
-		goto finished;
+		break;
 	}
 finished:
   pthread_mutex_unlock(&mux);
